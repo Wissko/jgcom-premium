@@ -1,405 +1,654 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState } from "react";
-import {
-  ArrowRight,
-  Building2,
-  ChevronLeft,
-  ChevronRight,
-  Headphones,
-  Lightbulb,
-  MapPin,
-  Menu,
-  MonitorPlay,
-  ShieldCheck,
-  Tent,
-  X,
-} from "lucide-react";
+import { usePathname } from "next/navigation";
 
-const services = [
-  {
-    title: "Sonorisation",
-    description:
-      "Systèmes son, diffusion et réglages pensés pour les conférences, cérémonies, lancements et soirées corporate.",
-    icon: Headphones,
-  },
-  {
-    title: "Éclairage",
-    description:
-      "Mise en lumière technique et scénographique pour valoriser les espaces, la scène et le rythme visuel de l’événement.",
-    icon: Lightbulb,
-  },
-  {
-    title: "Vidéo",
-    description:
-      "Écrans, projection, diffusion et restitution pour renforcer la lisibilité des contenus et des prises de parole.",
-    icon: MonitorPlay,
-  },
-  {
-    title: "Structures et scènes",
-    description:
-      "Structures techniques, scènes, couvertures et tentes pour donner un cadre fiable et professionnel aux opérations.",
-    icon: Tent,
-  },
-];
+const navLinks = [
+  { href: "/", label: "Accueil" },
+  { href: "/services", label: "Prestations" },
+  { href: "#realisations", label: "Réalisations" },
+  { href: "#contact", label: "Contact" },
+] as const;
 
-const sectors = [
-  {
-    title: "Entreprises",
-    text: "Conventions, séminaires, lancements, soirées corporate et dispositifs de marque avec exigence d’image.",
-    icon: Building2,
-  },
-  {
-    title: "Collectivités",
-    text: "Événements publics, institutionnels ou culturels qui demandent fiabilité, organisation et tenue technique.",
-    icon: MapPin,
-  },
-  {
-    title: "Agences",
-    text: "Un partenaire capable d’absorber la complexité d’un dispositif et de sécuriser sa qualité d’exécution.",
-    icon: ShieldCheck,
-  },
-];
-
-const proofPoints = [
-  "Prestataire technique événementiel depuis 1991",
-  "Parc matériel important et équipe technique permanente",
-  "Pilotage des dispositifs son, lumière, vidéo, structures et logistique",
-  "Accompagnement des entreprises, collectivités et agences en Île-de-France",
-];
-
-const slides = [
-  {
-    image: "/IMG_6016.jpeg",
-    label: "Scène et coordination technique",
-    title: "Une mise en scène qui clarifie immédiatement le niveau de l’événement.",
-    text: "Son, lumière et vidéo doivent fonctionner comme un ensemble cohérent pour donner plus d’impact à la prise de parole et à l’expérience sur place.",
-  },
+const showcase = [
   {
     image: "/IMG_6020.jpeg",
-    label: "Éclairage et valorisation d’espace",
-    title: "La lumière structure les regards et donne plus de force au lieu.",
-    text: "Une implantation bien pensée améliore la lisibilité, la perception premium et la qualité des images produites pendant l’événement.",
+    label: "Son, lumière, vidéo",
+    title: "Des dispositifs techniques qui rendent l’événement plus net, plus fluide, plus crédible.",
   },
   {
     image: "/IMG_6025.jpeg",
-    label: "Exécution événementielle",
-    title: "Un dispositif technique doit rassurer avant même qu’on l’explique.",
-    text: "Quand l’installation est juste, le public perçoit une organisation plus solide, plus fluide et plus crédible.",
+    label: "Structures et scènes",
+    title: "Une infrastructure lisible pour mieux accueillir le public, la prise de parole et l’expérience sur place.",
+  },
+  {
+    image: "/IMG_6016.jpeg",
+    label: "Pilotage global",
+    title: "Un partenaire unique pour coordonner les moyens techniques et tenir le niveau attendu.",
   },
 ];
 
-const navItems = [
-  { label: "Accueil", href: "/" },
-  { label: "Services", href: "/services" },
-  { label: "Réalisations", href: "#realisations" },
-  { label: "Contact", href: "#contact" },
+const serviceBlocks = [
+  {
+    title: "Sonorisation",
+    text: "Dispositifs audio pour conférences, cérémonies, lancements, événements institutionnels et soirées corporate.",
+  },
+  {
+    title: "Éclairage",
+    text: "Mise en lumière technique et scénographique pour donner du relief, structurer l’espace et valoriser les intervenants.",
+  },
+  {
+    title: "Vidéo",
+    text: "Écrans, projection et diffusion pour renforcer la lisibilité des contenus, des messages et des temps forts.",
+  },
+  {
+    title: "Structures, scènes, tentes",
+    text: "Installations temporaires fiables pour équiper les lieux, organiser les flux et sécuriser l’exécution de l’événement.",
+  },
 ];
 
-export default function Home() {
-  const [activeSlide, setActiveSlide] = useState(0);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const currentSlide = useMemo(() => slides[activeSlide], [activeSlide]);
+function SignatureMenu() {
+  const [open, setOpen] = useState(false);
+  const pathname = usePathname();
 
-  const previous = () => setActiveSlide((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
-  const next = () => setActiveSlide((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = "hidden";
+      document.body.style.position = "fixed";
+      document.body.style.width = "100%";
+    } else {
+      document.body.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.width = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.width = "";
+    };
+  }, [open]);
 
   return (
-    <main className="grain overflow-hidden">
-      <section className="relative min-h-screen border-b border-white/8">
-        <div className="absolute inset-0">
-          <Image
-            src="/IMG_6016.jpeg"
-            alt="Installation technique événementielle JGCOM"
-            fill
-            priority
-            className="object-cover object-center opacity-34"
-            sizes="100vw"
-          />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(47,109,255,0.24),transparent_25%),linear-gradient(180deg,rgba(4,9,18,0.16),rgba(4,9,18,0.82)_48%,rgba(4,9,18,0.96)_100%)]" />
-        </div>
+    <>
+      <motion.button
+        onClick={() => setOpen(true)}
+        aria-label="Open navigation"
+        aria-expanded={open}
+        animate={{ opacity: open ? 0 : 1, pointerEvents: open ? "none" : "auto" }}
+        transition={{ duration: 0.2 }}
+        style={{
+          position: "fixed",
+          top: "1rem",
+          left: "1rem",
+          zIndex: 200,
+          cursor: "pointer",
+          display: "flex",
+          alignItems: "center",
+          gap: "10px",
+          background: "#203A57",
+          border: "1.5px solid rgba(138,168,199,0.55)",
+          borderRadius: "999px",
+          padding: "9px 16px",
+          boxShadow: "0 2px 16px rgba(0,0,0,0.18)",
+        }}
+      >
+        <span
+          style={{
+            fontFamily: "var(--font-manrope), sans-serif",
+            fontWeight: 800,
+            fontSize: "13px",
+            color: "#FFFFFF",
+            letterSpacing: "0.05em",
+            lineHeight: 1,
+          }}
+        >
+          JG
+        </span>
+        <span style={{ display: "block", width: "1px", height: "13px", background: "rgba(255,255,255,0.25)" }} />
+        <span
+          style={{
+            fontFamily: "var(--font-manrope), sans-serif",
+            fontWeight: 700,
+            fontSize: "10px",
+            letterSpacing: "0.2em",
+            textTransform: "uppercase",
+            color: "#FFFFFF",
+          }}
+        >
+          Menu
+        </span>
+        <span style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+          <span style={{ display: "block", height: "1.5px", width: "15px", background: "#FFFFFF" }} />
+          <span style={{ display: "block", height: "1.5px", width: "9px", background: "#FFFFFF" }} />
+        </span>
+      </motion.button>
 
-        <div className="container-shell relative z-10 pt-4 md:pt-6">
-          <header className="glass rounded-[1.75rem] px-4 py-3 md:px-5">
-            <div className="flex items-center justify-between gap-4">
-              <Link href="/" className="flex items-center gap-3">
-                <Image src="/JGCOM.svg" alt="Logo JGCOM" width={132} height={42} className="h-10 w-auto" priority />
-              </Link>
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            key="overlay"
+            initial={{ clipPath: "inset(0 0 100% 0)" }}
+            animate={{ clipPath: "inset(0 0 0% 0)" }}
+            exit={{ clipPath: "inset(0 0 100% 0)" }}
+            transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }}
+            style={{
+              position: "fixed",
+              inset: 0,
+              zIndex: 190,
+              backgroundColor: "#203A57",
+              display: "flex",
+              flexDirection: "column",
+              overflowY: "auto",
+            }}
+            onClick={() => setOpen(false)}
+          >
+            <button
+              onClick={() => setOpen(false)}
+              aria-label="Close navigation"
+              style={{
+                position: "absolute",
+                top: "1rem",
+                right: "1.25rem",
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                padding: "10px",
+                display: "flex",
+                alignItems: "center",
+                gap: "0.6rem",
+                zIndex: 10,
+              }}
+            >
+              <span
+                style={{
+                  fontSize: "0.58rem",
+                  letterSpacing: "0.26em",
+                  textTransform: "uppercase",
+                  color: "#F2EFE8",
+                  fontFamily: "var(--font-manrope)",
+                  fontWeight: 700,
+                }}
+              >
+                Close
+              </span>
+              <span style={{ display: "block", width: "1.1rem", height: "1px", backgroundColor: "#F2EFE8" }} />
+            </button>
 
-              <nav className="hidden gap-8 text-sm text-white/74 md:flex">
-                {navItems.map((item) => (
-                  <Link key={item.label} href={item.href} className="transition hover:text-white">
-                    {item.label}
-                  </Link>
-                ))}
-              </nav>
-
-              <div className="flex items-center gap-3">
-                <a
-                  href="#contact"
-                  className="hidden rounded-full bg-[var(--accent)] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--accent-strong)] md:inline-flex"
+            <nav
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                flex: 1,
+                padding: "clamp(5rem, 12vw, 8rem) clamp(1.5rem, 6vw, 3.5rem) clamp(3rem, 8vw, 5rem)",
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {navLinks.map((link, i) => (
+                <motion.div
+                  key={link.label}
+                  initial={{ opacity: 0, x: -28 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.06 * i + 0.1, duration: 0.38, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }}
+                  style={{ borderBottom: "1px solid rgba(255,255,255,0.08)" }}
                 >
-                  Demander un devis
-                </a>
-                <button
-                  type="button"
-                  onClick={() => setMenuOpen((prev) => !prev)}
-                  className="glass inline-flex h-11 w-11 items-center justify-center rounded-full md:hidden"
-                  aria-label="Ouvrir le menu"
-                >
-                  {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-                </button>
-              </div>
-            </div>
-
-            {menuOpen && (
-              <div className="mt-4 grid gap-2 rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-3 md:hidden">
-                {navItems.map((item) => (
                   <Link
-                    key={item.label}
-                    href={item.href}
-                    onClick={() => setMenuOpen(false)}
-                    className="rounded-[1rem] px-4 py-3 text-sm text-white/82 transition hover:bg-white/8"
+                    href={link.href}
+                    style={{
+                      fontFamily: "var(--font-manrope), sans-serif",
+                      fontWeight: 800,
+                      display: "block",
+                      fontSize: "clamp(2rem, 8vw, 5.5rem)",
+                      lineHeight: 1.15,
+                      padding: "clamp(0.6rem, 2vw, 1rem) 0",
+                      color: "#F2EFE8",
+                    }}
                   >
-                    {item.label}
+                    {link.label}
                   </Link>
-                ))}
-                <a
-                  href="#contact"
-                  onClick={() => setMenuOpen(false)}
-                  className="mt-1 inline-flex items-center justify-center rounded-[1rem] bg-[var(--accent)] px-4 py-3 text-sm font-semibold text-white"
-                >
-                  Demander un devis
-                </a>
-              </div>
-            )}
-          </header>
-
-          <div className="grid min-h-[calc(100vh-112px)] gap-14 py-16 md:grid-cols-[1.08fr_0.92fr] md:items-end md:py-20">
-            <div className="max-w-4xl">
-              <div className="mb-6 inline-flex rounded-full border border-[var(--line)] bg-white/6 px-4 py-2 text-[11px] uppercase tracking-[0.3em] text-white/70">
-                Prestataire technique événementiel · Paris · Île-de-France
-              </div>
-              <h1 className="display-title max-w-5xl text-5xl font-semibold leading-[0.94] text-white sm:text-6xl md:text-7xl lg:text-[5.8rem]">
-                Son, lumière, vidéo et structures pour des événements mieux tenus.
-              </h1>
-              <p className="mt-6 max-w-2xl text-lg leading-8 text-white/74 md:text-xl">
-                JGCOM conçoit et déploie des prestations techniques événementielles pour entreprises, collectivités et agences : sonorisation, éclairage, vidéo, structures, scènes, tentes, décoration et mobilier.
-              </p>
-              <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-                <a
-                  href="#contact"
-                  className="inline-flex items-center justify-center gap-2 rounded-full bg-[var(--accent)] px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-[var(--accent-strong)]"
-                >
-                  Demander un devis
-                  <ArrowRight className="h-4 w-4" />
-                </a>
-                <Link
-                  href="/services"
-                  className="inline-flex items-center justify-center gap-2 rounded-full border border-[var(--line)] bg-white/6 px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-white/10"
-                >
-                  Voir les services
-                </Link>
-              </div>
-            </div>
-
-            <div className="glass ml-auto max-w-xl rounded-[2rem] p-6 md:p-8">
-              <p className="text-xs uppercase tracking-[0.35em] text-white/46">JGCOM</p>
-              <div className="mt-6 space-y-4 text-sm leading-7 text-white/74">
-                <p>
-                  Basée à proximité de Paris, l’entreprise accompagne depuis plus de 30 ans les projets événementiels qui demandent de la tenue technique, de la coordination et un rendu professionnel.
-                </p>
-                <p>
-                  L’objectif est de réunir les bons moyens techniques, la bonne mise en œuvre et le bon niveau d’exigence pour que l’événement soit plus lisible, plus fluide et plus impactant.
-                </p>
-              </div>
-              <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                {proofPoints.map((point) => (
-                  <div key={point} className="rounded-2xl border border-[var(--line)] bg-white/[0.04] px-4 py-3 text-sm text-white/78">
-                    {point}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="services" className="border-b border-white/8 py-20 md:py-24">
-        <div className="container-shell">
-          <div className="grid gap-10 md:grid-cols-[0.82fr_1.18fr] md:items-end">
-            <div>
-              <p className="text-xs uppercase tracking-[0.35em] text-[var(--accent-soft)]">Services</p>
-              <h2 className="display-title mt-4 text-4xl font-semibold leading-tight text-white md:text-5xl">
-                Une offre complète pour concevoir, installer et piloter vos dispositifs techniques.
-              </h2>
-            </div>
-            <p className="max-w-2xl text-base leading-8 text-white/66 md:justify-self-end">
-              Chaque prestation répond à un besoin concret : rendre une prise de parole audible, valoriser un espace, diffuser un contenu, structurer un lieu ou sécuriser le déroulé d’un événement.
-            </p>
-          </div>
-
-          <div className="mt-12 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-            {services.map((service) => {
-              const Icon = service.icon;
-              return (
-                <article key={service.title} className="glass rounded-[2rem] p-6">
-                  <div className="inline-flex rounded-2xl border border-[var(--line)] bg-white/6 p-3">
-                    <Icon className="h-6 w-6 text-[var(--accent-soft)]" />
-                  </div>
-                  <h3 className="mt-6 text-2xl font-semibold text-white">{service.title}</h3>
-                  <p className="mt-3 text-sm leading-7 text-white/68">{service.description}</p>
-                </article>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      <section id="realisations" className="border-b border-white/8 py-20 md:py-24">
-        <div className="container-shell">
-          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-            <div>
-              <p className="text-xs uppercase tracking-[0.35em] text-[var(--accent-soft)]">Réalisations</p>
-              <h2 className="display-title mt-4 text-4xl font-semibold text-white md:text-5xl">
-                Une lecture plus premium des installations et du savoir-faire JGCOM.
-              </h2>
-            </div>
-            <div className="flex gap-3">
-              <button
-                type="button"
-                onClick={previous}
-                className="glass inline-flex h-12 w-12 items-center justify-center rounded-full transition hover:bg-white/10"
-                aria-label="Slide précédente"
-              >
-                <ChevronLeft className="h-5 w-5" />
-              </button>
-              <button
-                type="button"
-                onClick={next}
-                className="glass inline-flex h-12 w-12 items-center justify-center rounded-full transition hover:bg-white/10"
-                aria-label="Slide suivante"
-              >
-                <ChevronRight className="h-5 w-5" />
-              </button>
-            </div>
-          </div>
-
-          <div className="mt-10 grid gap-5 lg:grid-cols-[1.18fr_0.82fr] lg:items-stretch">
-            <div className="relative min-h-[520px] overflow-hidden rounded-[2.5rem] border border-[var(--line)] bg-white/5">
-              <Image
-                src={currentSlide.image}
-                alt={currentSlide.title}
-                fill
-                className="object-cover transition duration-500"
-                sizes="(max-width: 1024px) 100vw, 65vw"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#07111f] via-[#07111f]/20 to-transparent" />
-              <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10">
-                <p className="text-xs uppercase tracking-[0.35em] text-white/54">{currentSlide.label}</p>
-                <h3 className="mt-4 max-w-3xl text-3xl font-semibold leading-tight text-white md:text-4xl">
-                  {currentSlide.title}
-                </h3>
-                <p className="mt-4 max-w-2xl text-base leading-8 text-white/72">{currentSlide.text}</p>
-              </div>
-            </div>
-
-            <div className="grid gap-4">
-              {slides.map((slide, index) => (
-                <button
-                  key={slide.title}
-                  type="button"
-                  onClick={() => setActiveSlide(index)}
-                  className={`glass relative overflow-hidden rounded-[2rem] border p-4 text-left transition ${
-                    index === activeSlide ? "border-[var(--line-strong)] bg-white/[0.08]" : "border-[var(--line)]"
-                  }`}
-                >
-                  <div className="grid gap-4 sm:grid-cols-[140px_1fr] sm:items-center">
-                    <div className="relative h-28 overflow-hidden rounded-[1.4rem] border border-[var(--line)]">
-                      <Image src={slide.image} alt={slide.label} fill className="object-cover" sizes="160px" />
-                    </div>
-                    <div>
-                      <p className="text-[11px] uppercase tracking-[0.3em] text-white/44">{slide.label}</p>
-                      <p className="mt-3 text-lg font-semibold text-white">{slide.title}</p>
-                    </div>
-                  </div>
-                </button>
+                </motion.div>
               ))}
+            </nav>
+
+            <div
+              style={{
+                padding: "clamp(1.5rem, 4vw, 2.5rem) clamp(1.5rem, 6vw, 3.5rem)",
+                color: "#D8D1C4",
+                fontFamily: "var(--font-inter), sans-serif",
+                fontWeight: 300,
+                fontSize: "0.8rem",
+                lineHeight: 1.7,
+                borderTop: "1px solid rgba(255,255,255,0.08)",
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <p>Prestataire technique événementiel</p>
+              <p>Paris · Île-de-France</p>
             </div>
-          </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+}
+
+export default function HomePage() {
+  return (
+    <main>
+      <SignatureMenu />
+
+      <section
+        style={{
+          minHeight: "100svh",
+          display: "flex",
+          flexDirection: "column",
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
+        <Image
+          src="/IMG_6016.jpeg"
+          alt="Installation technique événementielle JGCOM"
+          fill
+          priority
+          style={{ objectFit: "cover", objectPosition: "center" }}
+        />
+
+        <div
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            inset: 0,
+            background:
+              "linear-gradient(to bottom, rgba(12,20,34,0.04) 0%, rgba(12,20,34,0.08) 35%, rgba(12,20,34,0.78) 100%)",
+            zIndex: 1,
+          }}
+        />
+
+        <div
+          style={{
+            position: "relative",
+            zIndex: 2,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flex-end",
+            minHeight: "100svh",
+            padding: "clamp(1.25rem, 5vw, 4rem)",
+            paddingBottom: "clamp(2rem, 6vw, 5rem)",
+            paddingTop: "5rem",
+          }}
+        >
+          <motion.h1
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }}
+            style={{
+              fontFamily: "var(--font-manrope), sans-serif",
+              fontWeight: 800,
+              fontSize: "clamp(3rem, 11vw, 10rem)",
+              lineHeight: 0.9,
+              color: "#FFFFFF",
+              letterSpacing: "-0.04em",
+              maxWidth: "11ch",
+            }}
+          >
+            JG /<br />
+            COM
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.18, duration: 0.45, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }}
+            style={{
+              marginTop: "1.5rem",
+              fontFamily: "var(--font-inter), sans-serif",
+              fontWeight: 300,
+              fontSize: "clamp(0.65rem, 1.3vw, 0.9rem)",
+              letterSpacing: "0.22em",
+              textTransform: "uppercase",
+              color: "rgba(255,255,255,0.82)",
+            }}
+          >
+            Prestataire technique événementiel · Paris · Île-de-France
+          </motion.p>
+
+          <motion.p
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.26, duration: 0.45, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }}
+            style={{
+              marginTop: "1.25rem",
+              maxWidth: "34rem",
+              fontFamily: "var(--font-inter), sans-serif",
+              fontWeight: 300,
+              fontSize: "clamp(1rem, 2vw, 1.2rem)",
+              lineHeight: 1.7,
+              color: "rgba(255,255,255,0.9)",
+            }}
+          >
+            Sonorisation, éclairage, vidéo, structures, scènes, tentes, décoration et mobilier pour entreprises, collectivités et agences.
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.35, duration: 0.45 }}
+            style={{ marginTop: "1.75rem", display: "flex", gap: "0.9rem", flexWrap: "wrap" }}
+          >
+            <Link
+              href="/services"
+              style={{
+                display: "inline-block",
+                padding: "0.9rem 2.25rem",
+                backgroundColor: "#FFFFFF",
+                color: "#203A57",
+                fontFamily: "var(--font-manrope), sans-serif",
+                fontWeight: 800,
+                fontSize: "0.62rem",
+                letterSpacing: "0.22em",
+                textTransform: "uppercase",
+                whiteSpace: "nowrap",
+              }}
+            >
+              Voir les prestations
+            </Link>
+            <a
+              href="#contact"
+              style={{
+                display: "inline-block",
+                padding: "0.9rem 2.25rem",
+                backgroundColor: "rgba(255,255,255,0.08)",
+                color: "#FFFFFF",
+                border: "1px solid rgba(255,255,255,0.16)",
+                fontFamily: "var(--font-manrope), sans-serif",
+                fontWeight: 800,
+                fontSize: "0.62rem",
+                letterSpacing: "0.22em",
+                textTransform: "uppercase",
+                whiteSpace: "nowrap",
+              }}
+            >
+              Demander un devis
+            </a>
+          </motion.div>
         </div>
       </section>
 
-      <section id="expertise" className="border-b border-white/8 py-20 md:py-24">
-        <div className="container-shell grid gap-12 md:grid-cols-[0.92fr_1.08fr]">
-          <div>
-            <p className="text-xs uppercase tracking-[0.35em] text-[var(--accent-soft)]">Expertise</p>
-            <h2 className="display-title mt-4 text-4xl font-semibold leading-tight text-white md:text-5xl">
-              Un accompagnement technique pensé pour la qualité d’exécution et l’image finale.
-            </h2>
-            <p className="mt-6 max-w-xl text-base leading-8 text-white/66">
-              Au-delà du matériel, JGCOM intervient sur l’organisation technique globale : préparation, cohérence des moyens, fluidité sur site et qualité perçue par les publics, les intervenants et les commanditaires.
+      <section
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 320px), 1fr))",
+        }}
+      >
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }}
+          style={{
+            backgroundColor: "#D8D1C4",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "clamp(3rem, 8vw, 5rem) clamp(1.5rem, 5vw, 4rem)",
+            minHeight: "clamp(260px, 40vw, 480px)",
+          }}
+        >
+          <p
+            style={{
+              fontFamily: "var(--font-manrope), sans-serif",
+              fontWeight: 800,
+              fontSize: "clamp(1.4rem, 3.5vw, 2.25rem)",
+              lineHeight: 1.2,
+              color: "#1F2F3D",
+              textAlign: "center",
+              letterSpacing: "-0.02em",
+            }}
+          >
+            Une technique juste.
+            <br />
+            Une image plus forte.
+            <br />
+            Un événement mieux tenu.
+          </p>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }}
+          style={{
+            position: "relative",
+            minHeight: "clamp(260px, 40vw, 480px)",
+            overflow: "hidden",
+          }}
+        >
+          <Image
+            src="/IMG_6020.jpeg"
+            alt="Éclairage et structure JGCOM"
+            fill
+            style={{ objectFit: "cover", objectPosition: "center" }}
+          />
+        </motion.div>
+      </section>
+
+      <motion.section
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5 }}
+        style={{
+          position: "relative",
+          overflow: "hidden",
+          backgroundColor: "#203A57",
+          padding: "clamp(2.5rem, 5vw, 4rem) clamp(1.5rem, 5vw, 4rem)",
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+          gap: "2.5rem",
+        }}
+      >
+        <div aria-hidden="true" style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
+          <Image
+            src="/IMG_6025.jpeg"
+            alt=""
+            fill
+            style={{ objectFit: "cover", objectPosition: "center", opacity: 0.12 }}
+          />
+        </div>
+
+        {[
+          { label: "Métiers", value: "Sonorisation, éclairage, vidéo, structures, scènes, tentes" },
+          { label: "Clients", value: "Entreprises, collectivités, agences" },
+          { label: "Position", value: "Prestataire technique événementiel depuis 1991" },
+        ].map(({ label, value }) => (
+          <div key={label} style={{ position: "relative", zIndex: 1 }}>
+            <p
+              style={{
+                fontFamily: "var(--font-manrope), sans-serif",
+                fontWeight: 800,
+                fontSize: "0.58rem",
+                letterSpacing: "0.26em",
+                textTransform: "uppercase",
+                color: "#F2EFE8",
+                opacity: 0.54,
+                marginBottom: "0.55rem",
+              }}
+            >
+              {label}
+            </p>
+            <p
+              style={{
+                fontFamily: "var(--font-inter), sans-serif",
+                fontWeight: 300,
+                color: "#F2EFE8",
+                fontSize: "0.95rem",
+                lineHeight: 1.6,
+              }}
+            >
+              {value}
             </p>
           </div>
+        ))}
+      </motion.section>
 
-          <div className="grid gap-4 md:grid-cols-2">
-            {proofPoints.map((point) => (
-              <div key={point} className="glass rounded-[1.8rem] p-5">
-                <ShieldCheck className="h-5 w-5 text-[var(--accent-soft)]" />
-                <p className="mt-4 text-sm leading-7 text-white/74">{point}</p>
-              </div>
-            ))}
-          </div>
-        </div>
+      <section id="realisations" style={{ background: "#FBF8F2" }}>
+        {showcase.map((item, index) => (
+          <section
+            key={item.title}
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 360px), 1fr))",
+              alignItems: "stretch",
+            }}
+          >
+            <motion.div
+              initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }}
+              style={{
+                position: "relative",
+                minHeight: "clamp(320px, 48vw, 620px)",
+                order: index % 2 === 0 ? 0 : 1,
+              }}
+            >
+              <Image src={item.image} alt={item.title} fill style={{ objectFit: "cover", objectPosition: "center" }} />
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: index % 2 === 0 ? 20 : -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }}
+              style={{
+                background: index % 2 === 0 ? "#FBF8F2" : "#E6EDF4",
+                padding: "clamp(2.5rem, 7vw, 5rem)",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+              }}
+            >
+              <p
+                style={{
+                  fontFamily: "var(--font-manrope), sans-serif",
+                  fontWeight: 800,
+                  fontSize: "0.58rem",
+                  letterSpacing: "0.26em",
+                  textTransform: "uppercase",
+                  color: "#2E5F95",
+                  marginBottom: "1rem",
+                }}
+              >
+                {item.label}
+              </p>
+              <h2
+                style={{
+                  fontFamily: "var(--font-manrope), sans-serif",
+                  fontWeight: 800,
+                  fontSize: "clamp(2rem, 4.8vw, 4.5rem)",
+                  lineHeight: 0.96,
+                  letterSpacing: "-0.04em",
+                  color: "#1F2F3D",
+                  maxWidth: "11ch",
+                }}
+              >
+                {item.title}
+              </h2>
+            </motion.div>
+          </section>
+        ))}
       </section>
 
-      <section className="border-b border-white/8 py-20 md:py-24">
-        <div className="container-shell grid gap-4 md:grid-cols-3">
-          {sectors.map((sector) => {
-            const Icon = sector.icon;
-            return (
-              <article key={sector.title} className="glass rounded-[2rem] p-6">
-                <Icon className="h-6 w-6 text-[var(--accent-soft)]" />
-                <h3 className="mt-6 text-2xl font-semibold text-white">{sector.title}</h3>
-                <p className="mt-3 text-sm leading-7 text-white/68">{sector.text}</p>
-              </article>
-            );
-          })}
-        </div>
-      </section>
-
-      <section id="contact" className="py-20 md:py-24">
-        <div className="container-shell">
-          <div className="glass relative overflow-hidden rounded-[2.5rem] p-8 md:p-12">
-            <div className="absolute -right-16 -top-16 h-48 w-48 rounded-full bg-[var(--accent)]/20 blur-3xl" />
-            <div className="absolute -bottom-20 left-10 h-52 w-52 rounded-full bg-[var(--accent-soft)]/10 blur-3xl" />
-            <div className="relative z-10 grid gap-10 md:grid-cols-[1fr_auto] md:items-end">
-              <div>
-                <p className="text-xs uppercase tracking-[0.35em] text-[var(--accent-soft)]">Contact</p>
-                <h2 className="display-title mt-4 max-w-3xl text-4xl font-semibold leading-tight text-white md:text-5xl">
-                  Vous avez un projet événementiel à équiper : parlons du dispositif adapté.
-                </h2>
-                <p className="mt-5 max-w-2xl text-base leading-8 text-white/68">
-                  Nous étudions vos contraintes, votre lieu, votre format d’événement et le niveau d’image attendu pour proposer une solution technique claire, réaliste et bien exécutée.
-                </p>
-              </div>
-              <div className="flex flex-col gap-3">
-                <a
-                  href="mailto:contact@jgcom.fr"
-                  className="inline-flex items-center justify-center rounded-full bg-[var(--accent)] px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-[var(--accent-strong)]"
-                >
-                  Demander un devis
-                </a>
-                <Link
-                  href="/services"
-                  className="inline-flex items-center justify-center rounded-full border border-[var(--line)] bg-white/6 px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-white/10"
-                >
-                  Voir les prestations
-                </Link>
-              </div>
-            </div>
+      <section id="contact" style={{ background: "#1F2F3D", color: "#F2EFE8", padding: "clamp(3rem, 7vw, 5rem) clamp(1.5rem, 5vw, 4rem)" }}>
+        <div style={{ maxWidth: "900px" }}>
+          <p
+            style={{
+              fontFamily: "var(--font-manrope), sans-serif",
+              fontWeight: 800,
+              fontSize: "0.58rem",
+              letterSpacing: "0.26em",
+              textTransform: "uppercase",
+              color: "rgba(242,239,232,0.6)",
+              marginBottom: "1rem",
+            }}
+          >
+            Contact
+          </p>
+          <h2
+            style={{
+              fontFamily: "var(--font-manrope), sans-serif",
+              fontWeight: 800,
+              fontSize: "clamp(2rem, 5vw, 5rem)",
+              lineHeight: 0.96,
+              letterSpacing: "-0.04em",
+              maxWidth: "12ch",
+            }}
+          >
+            Parlons de votre prochain dispositif événementiel.
+          </h2>
+          <p
+            style={{
+              marginTop: "1.5rem",
+              maxWidth: "40rem",
+              fontFamily: "var(--font-inter), sans-serif",
+              fontSize: "1rem",
+              lineHeight: 1.8,
+              color: "rgba(242,239,232,0.82)",
+            }}
+          >
+            JGCOM étudie vos contraintes, votre lieu, vos objectifs et le niveau d’image attendu pour proposer une solution technique claire, réaliste et bien exécutée.
+          </p>
+          <div style={{ marginTop: "2rem", display: "flex", gap: "0.9rem", flexWrap: "wrap" }}>
+            <a
+              href="mailto:contact@jgcom.fr"
+              style={{
+                display: "inline-block",
+                padding: "0.9rem 2.25rem",
+                backgroundColor: "#FFFFFF",
+                color: "#203A57",
+                fontFamily: "var(--font-manrope), sans-serif",
+                fontWeight: 800,
+                fontSize: "0.62rem",
+                letterSpacing: "0.22em",
+                textTransform: "uppercase",
+              }}
+            >
+              Demander un devis
+            </a>
+            <Link
+              href="/services"
+              style={{
+                display: "inline-block",
+                padding: "0.9rem 2.25rem",
+                backgroundColor: "transparent",
+                color: "#F2EFE8",
+                border: "1px solid rgba(255,255,255,0.16)",
+                fontFamily: "var(--font-manrope), sans-serif",
+                fontWeight: 800,
+                fontSize: "0.62rem",
+                letterSpacing: "0.22em",
+                textTransform: "uppercase",
+              }}
+            >
+              Explorer les prestations
+            </Link>
           </div>
         </div>
       </section>
