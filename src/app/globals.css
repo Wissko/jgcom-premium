@@ -1,18 +1,20 @@
 @import "tailwindcss";
 
 :root {
-  --background: #06070a;
-  --foreground: rgba(245, 247, 250, 0.94);
-  --muted: rgba(196, 201, 212, 0.72);
-  --line: rgba(255, 255, 255, 0.1);
-  --line-strong: rgba(255, 255, 255, 0.18);
-  --card: rgba(12, 15, 20, 0.68);
-  --card-soft: rgba(18, 24, 33, 0.42);
-  --accent: #88a8ff;
-  --accent-2: #daf0ff;
-  --accent-warm: #d8b47a;
-  --surface: #0b0e13;
-  --surface-2: #11161f;
+  --background: #07111f;
+  --background-soft: #0d1a2d;
+  --foreground: rgba(246, 249, 255, 0.96);
+  --muted: rgba(193, 208, 228, 0.72);
+  --line: rgba(148, 180, 230, 0.18);
+  --line-strong: rgba(148, 180, 230, 0.3);
+  --card: rgba(10, 20, 36, 0.78);
+  --card-soft: rgba(15, 29, 49, 0.56);
+  --accent: #2f6dff;
+  --accent-strong: #1d4ed8;
+  --accent-soft: #8eb5ff;
+  --accent-pale: #d8e6ff;
+  --surface: #0c1627;
+  --surface-2: #12223a;
 }
 
 @theme inline {
@@ -36,9 +38,9 @@ body {
   margin: 0;
   min-height: 100vh;
   background:
-    radial-gradient(circle at top left, rgba(106, 140, 255, 0.22), transparent 28%),
-    radial-gradient(circle at 85% 15%, rgba(216, 180, 122, 0.15), transparent 22%),
-    linear-gradient(180deg, #06070a 0%, #090c11 38%, #050608 100%);
+    radial-gradient(circle at top left, rgba(47, 109, 255, 0.24), transparent 30%),
+    radial-gradient(circle at 85% 10%, rgba(123, 165, 255, 0.12), transparent 24%),
+    linear-gradient(180deg, #07111f 0%, #091427 32%, #08111d 100%);
   color: var(--foreground);
   font-family: var(--font-inter), sans-serif;
 }
@@ -48,13 +50,17 @@ a {
   text-decoration: none;
 }
 
+button {
+  font: inherit;
+}
+
 img {
   max-width: 100%;
   height: auto;
 }
 
 ::selection {
-  background: rgba(136, 168, 255, 0.32);
+  background: rgba(47, 109, 255, 0.34);
   color: white;
 }
 
@@ -64,7 +70,7 @@ img {
   inset: 0;
   pointer-events: none;
   z-index: 100;
-  opacity: 0.045;
+  opacity: 0.035;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.75'/%3E%3C/svg%3E");
   mix-blend-mode: soft-light;
 }
@@ -75,11 +81,11 @@ img {
 }
 
 .glass {
-  background: rgba(11, 14, 19, 0.56);
-  backdrop-filter: blur(22px) saturate(150%);
-  -webkit-backdrop-filter: blur(22px) saturate(150%);
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 18px 80px rgba(0,0,0,0.28);
+  background: rgba(9, 18, 31, 0.72);
+  backdrop-filter: blur(22px) saturate(145%);
+  -webkit-backdrop-filter: blur(22px) saturate(145%);
+  border: 1px solid rgba(148, 180, 230, 0.16);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 18px 80px rgba(3,10,20,0.34);
 }
 
 .display-title {
@@ -98,5 +104,5 @@ img {
   bottom: -1px;
   width: 100%;
   height: 1px;
-  background: linear-gradient(90deg, rgba(255,255,255,0.34), rgba(255,255,255,0.04));
+  background: linear-gradient(90deg, rgba(142,181,255,0.28), rgba(142,181,255,0.04));
 }
