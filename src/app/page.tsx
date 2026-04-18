@@ -1,9 +1,13 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useMemo, useState } from "react";
 import {
   ArrowRight,
   Building2,
-  Cable,
+  ChevronLeft,
+  ChevronRight,
   CirclePlay,
   Headphones,
   Lightbulb,
@@ -17,139 +21,155 @@ const services = [
   {
     title: "Sonorisation",
     description:
-      "Des dispositifs son clairs, puissants et calibrés pour conférences, lancements, cérémonies et soirées corporate.",
+      "Des systèmes son calibrés pour rendre chaque prise de parole lisible et chaque moment fort plus net.",
     icon: Headphones,
   },
   {
     title: "Éclairage",
     description:
-      "Une lumière pensée pour l’impact visuel, la lisibilité de scène et la mise en valeur des espaces et intervenants.",
+      "Une lumière qui hiérarchise l’espace, valorise la scène et donne immédiatement plus de niveau au dispositif.",
     icon: Lightbulb,
   },
   {
     title: "Vidéo",
     description:
-      "Écrans, diffusion, projection, murs LED et solutions de restitution conçus pour les prises de parole et les expériences immersives.",
+      "Écrans, projection, diffusion et restitution pensés pour servir le message sans alourdir l’expérience.",
     icon: MonitorPlay,
   },
   {
-    title: "Structures et scènes",
+    title: "Structures",
     description:
-      "Structures techniques, scènes, couvertures et installations temporaires fiables pour les opérations exigeantes.",
+      "Scènes, couvertures, tentes et structures techniques pour produire un cadre solide, lisible et premium.",
     icon: Tent,
   },
 ];
 
-const sectors = ["Entreprises", "Collectivités", "Agences", "Lieux événementiels"];
+const sectors = [
+  {
+    title: "Entreprises",
+    text: "Conventions, lancements, soirées corporate et prises de parole avec exigence d’image.",
+    icon: Building2,
+  },
+  {
+    title: "Collectivités",
+    text: "Dispositifs publics et institutionnels qui demandent fiabilité, lisibilité et tenue opérationnelle.",
+    icon: MapPin,
+  },
+  {
+    title: "Agences",
+    text: "Un partenaire technique capable d’absorber la complexité et de protéger la qualité finale du projet.",
+    icon: CirclePlay,
+  },
+];
 
 const proofPoints = [
   "Prestataire technique événementiel depuis 1991",
   "Parc matériel important et équipe technique permanente",
-  "Pilotage global : son, lumière, vidéo, structures et logistique",
-  "Interventions en Île-de-France et sur dispositifs professionnels exigeants",
+  "Pilotage de dispositifs complets : son, lumière, vidéo, structures et logistique",
+  "Interventions pour environnements professionnels exigeants en Île-de-France",
 ];
 
-const gallery = [
-  "/IMG_6016.jpeg",
-  "/IMG_6020.jpeg",
-  "/IMG_6021.jpeg",
-  "/IMG_6025.jpeg",
+const slides = [
+  {
+    image: "/IMG_6016.jpeg",
+    label: "Scénographie technique",
+    title: "Une lecture de scène plus propre, plus forte, plus crédible.",
+    text: "Quand la technique est bien pensée, elle ne parasite pas l’événement : elle le porte.",
+  },
+  {
+    image: "/IMG_6020.jpeg",
+    label: "Éclairage et mise en espace",
+    title: "La lumière comme outil de hiérarchie visuelle et de perception premium.",
+    text: "Le bon éclairage structure les regards, clarifie les zones clés et renforce l’impact du lieu.",
+  },
+  {
+    image: "/IMG_6025.jpeg",
+    label: "Exécution opérationnelle",
+    title: "Des dispositifs techniques pensés pour rassurer dès les premières secondes.",
+    text: "Le visiteur ne doit pas percevoir la complexité. Il doit percevoir la maîtrise.",
+  },
 ];
 
 export default function Home() {
+  const [activeSlide, setActiveSlide] = useState(0);
+  const currentSlide = useMemo(() => slides[activeSlide], [activeSlide]);
+
+  const previous = () => setActiveSlide((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
+  const next = () => setActiveSlide((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
+
   return (
     <main className="grain overflow-hidden">
-      <section className="relative min-h-screen section-line">
+      <section className="relative min-h-screen border-b border-white/8">
         <div className="absolute inset-0">
           <Image
             src="/IMG_6016.jpeg"
             alt="Installation technique événementielle JGCOM"
             fill
             priority
-            className="object-cover object-center opacity-35"
+            className="object-cover object-center opacity-36"
             sizes="100vw"
           />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(136,168,255,0.24),transparent_28%),linear-gradient(180deg,rgba(4,6,10,0.1),rgba(4,6,10,0.82)_45%,rgba(4,6,10,0.96)_100%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(136,168,255,0.22),transparent_26%),linear-gradient(180deg,rgba(4,6,10,0.1),rgba(4,6,10,0.8)_48%,rgba(4,6,10,0.96)_100%)]" />
         </div>
 
-        <header className="sticky top-0 z-50">
-          <div className="container-shell pt-4">
-            <div className="glass flex items-center justify-between rounded-full px-5 py-3">
-              <div>
-                <p className="text-xs uppercase tracking-[0.35em] text-white/55">JGCOM</p>
-                <p className="text-sm text-white/75">Prestataire technique événementiel</p>
-              </div>
-              <nav className="hidden gap-8 text-sm text-white/70 md:flex">
-                <a href="#services">Services</a>
-                <a href="#realisations">Réalisations</a>
-                <a href="#expertise">Expertise</a>
-                <a href="#contact">Contact</a>
-              </nav>
-              <a
-                href="#contact"
-                className="rounded-full border border-white/15 bg-white px-4 py-2 text-sm font-medium text-slate-950 transition hover:bg-white/90"
-              >
-                Demander un devis
-              </a>
-            </div>
-          </div>
-        </header>
+        <div className="container-shell relative z-10 pt-4 md:pt-6">
+          <header className="glass flex items-center justify-between rounded-full px-4 py-3 md:px-5">
+            <Link href="/" className="flex items-center gap-3">
+              <Image src="/JGCOM.svg" alt="Logo JGCOM" width={124} height={40} className="h-9 w-auto" priority />
+            </Link>
+            <nav className="hidden gap-8 text-sm text-white/70 md:flex">
+              <a href="#services">Services</a>
+              <a href="#realisations">Réalisations</a>
+              <a href="#expertise">Expertise</a>
+              <a href="#contact">Contact</a>
+            </nav>
+            <a
+              href="#contact"
+              className="rounded-full border border-white/12 bg-white px-4 py-2 text-sm font-medium text-slate-950 transition hover:bg-white/92"
+            >
+              Demander un devis
+            </a>
+          </header>
 
-        <div className="container-shell relative z-10 flex min-h-[calc(100vh-92px)] items-end py-18 pb-10 md:pb-18">
-          <div className="grid w-full gap-12 md:grid-cols-[1.15fr_0.85fr] md:items-end">
+          <div className="grid min-h-[calc(100vh-92px)] gap-14 py-16 md:grid-cols-[1.1fr_0.9fr] md:items-end md:py-20">
             <div className="max-w-4xl">
-              <div className="mb-6 inline-flex rounded-full border border-white/12 bg-white/6 px-4 py-2 text-xs uppercase tracking-[0.3em] text-white/70">
-                Paris · Île-de-France · Corporate · Institutionnel
+              <div className="mb-6 inline-flex rounded-full border border-white/12 bg-white/6 px-4 py-2 text-[11px] uppercase tracking-[0.3em] text-white/68">
+                Prestataire technique événementiel · Paris · Île-de-France
               </div>
-              <h1 className="display-title max-w-5xl text-5xl font-semibold leading-[0.95] text-white sm:text-6xl md:text-7xl lg:text-[6.2rem]">
-                L’infrastructure technique qui donne de la stature à vos événements.
+              <h1 className="display-title max-w-5xl text-5xl font-semibold leading-[0.94] text-white sm:text-6xl md:text-7xl lg:text-[6rem]">
+                Un site plus premium commence par des événements mieux mis en scène.
               </h1>
               <p className="mt-6 max-w-2xl text-lg leading-8 text-white/72 md:text-xl">
-                JGCOM conçoit et déploie des prestations techniques premium : sonorisation,
-                éclairage, vidéo, structures, scènes, tentes et mobilier pour entreprises,
-                collectivités et agences qui veulent un rendu net, maîtrisé et crédible.
+                JGCOM accompagne les entreprises, collectivités et agences avec des dispositifs techniques élégants, fiables et lisibles : sonorisation, éclairage, vidéo, structures, scènes, tentes et mobilier.
               </p>
               <div className="mt-8 flex flex-col gap-4 sm:flex-row">
                 <a
                   href="#contact"
-                  className="inline-flex items-center justify-center gap-2 rounded-full bg-[#88a8ff] px-6 py-3.5 text-sm font-semibold text-slate-950 transition hover:bg-[#a6bcff]"
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-[#88a8ff] px-6 py-3.5 text-sm font-semibold text-slate-950 transition hover:bg-[#a2baff]"
                 >
                   Cadrer votre projet
                   <ArrowRight className="h-4 w-4" />
                 </a>
-                <a
-                  href="#realisations"
+                <Link
+                  href="/services"
                   className="inline-flex items-center justify-center gap-2 rounded-full border border-white/14 bg-white/6 px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-white/10"
                 >
-                  Voir les réalisations
+                  Explorer les services
                   <CirclePlay className="h-4 w-4" />
-                </a>
+                </Link>
               </div>
             </div>
 
             <div className="glass ml-auto max-w-xl rounded-[2rem] p-6 md:p-8">
-              <div className="mb-6 flex items-center justify-between border-b border-white/10 pb-4">
-                <div>
-                  <p className="text-xs uppercase tracking-[0.35em] text-white/45">Positionnement</p>
-                  <p className="mt-2 text-2xl font-semibold text-white">Technique, image, conversion</p>
-                </div>
-                <ShieldCheck className="h-10 w-10 text-[#d8b47a]" />
-              </div>
-              <div className="space-y-4 text-sm leading-7 text-white/72">
-                <p>
-                  Nous intervenons comme partenaire technique unique ou comme renfort expert pour sécuriser l’exécution, la lisibilité scénique et la qualité perçue de vos opérations.
-                </p>
-                <p>
-                  L’enjeu n’est pas seulement d’installer du matériel : il s’agit de rendre votre événement plus lisible, plus rassurant et plus mémorable pour vos publics.
-                </p>
+              <p className="text-xs uppercase tracking-[0.35em] text-white/42">Ce que le client doit ressentir</p>
+              <div className="mt-6 space-y-4 text-sm leading-7 text-white/70">
+                <p>Un événement mieux tenu. Une lecture plus claire. Une exécution qui inspire confiance sans montrer d’effort.</p>
+                <p>Le rôle du site est le même : rassurer, qualifier et convertir avec plus de netteté, moins de bruit et davantage de stature.</p>
               </div>
               <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                {sectors.map((sector) => (
-                  <div
-                    key={sector}
-                    className="rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white/75"
-                  >
-                    {sector}
+                {proofPoints.slice(0, 4).map((point) => (
+                  <div key={point} className="rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white/74">
+                    {point}
                   </div>
                 ))}
               </div>
@@ -158,36 +178,30 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="services" className="section-line py-20 md:py-28">
+      <section id="services" className="border-b border-white/8 py-20 md:py-24">
         <div className="container-shell">
-          <div className="grid gap-12 md:grid-cols-[0.8fr_1.2fr]">
+          <div className="grid gap-10 md:grid-cols-[0.85fr_1.15fr] md:items-end">
             <div>
               <p className="text-xs uppercase tracking-[0.35em] text-[#d8b47a]">Services</p>
-              <h2 className="display-title mt-4 max-w-xl text-4xl font-semibold leading-tight text-white md:text-5xl">
-                Une chaîne technique complète, pilotée comme un dispositif de marque.
+              <h2 className="display-title mt-4 text-4xl font-semibold leading-tight text-white md:text-5xl">
+                Chaque métier présenté comme une vraie promesse de résultat.
               </h2>
             </div>
-            <p className="max-w-2xl text-base leading-8 text-white/66 md:pt-12">
-              La performance d’un événement professionnel repose sur la coordination. Nous réunissons la technique, la logistique et la mise en scène pour créer des environnements cohérents, lisibles et solides sur toute la durée d’exploitation.
+            <p className="max-w-2xl text-base leading-8 text-white/64 md:justify-self-end">
+              Pour éviter l’effet “site IA”, chaque section doit avoir une intention simple : expliquer, rassurer, projeter. Pas de bloc fourre-tout. Pas de texte générique. Pas de fausse sophistication.
             </p>
           </div>
 
-          <div className="mt-12 grid gap-4 md:grid-cols-2">
+          <div className="mt-12 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             {services.map((service) => {
               const Icon = service.icon;
               return (
-                <article
-                  key={service.title}
-                  className="glass rounded-[2rem] p-6 md:p-8"
-                >
-                  <div className="flex items-center justify-between gap-4">
-                    <div className="rounded-2xl border border-white/10 bg-white/6 p-3">
-                      <Icon className="h-6 w-6 text-[#88a8ff]" />
-                    </div>
-                    <Cable className="h-5 w-5 text-white/25" />
+                <article key={service.title} className="glass rounded-[2rem] p-6">
+                  <div className="inline-flex rounded-2xl border border-white/10 bg-white/6 p-3">
+                    <Icon className="h-6 w-6 text-[#88a8ff]" />
                   </div>
-                  <h3 className="mt-8 text-2xl font-semibold text-white">{service.title}</h3>
-                  <p className="mt-4 max-w-xl text-sm leading-7 text-white/66">{service.description}</p>
+                  <h3 className="mt-6 text-2xl font-semibold text-white">{service.title}</h3>
+                  <p className="mt-3 text-sm leading-7 text-white/66">{service.description}</p>
                 </article>
               );
             })}
@@ -195,128 +209,131 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="realisations" className="section-line py-20 md:py-28">
+      <section id="realisations" className="border-b border-white/8 py-20 md:py-24">
         <div className="container-shell">
           <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
-              <p className="text-xs uppercase tracking-[0.35em] text-[#d8b47a]">Réalisations</p>
+              <p className="text-xs uppercase tracking-[0.35em] text-[#d8b47a]">Carousel premium</p>
               <h2 className="display-title mt-4 text-4xl font-semibold text-white md:text-5xl">
-                Des installations qui doivent convaincre avant même la prise de parole.
+                Un système de slides plus design, plus narratif, plus premium.
               </h2>
             </div>
-            <p className="max-w-xl text-sm leading-7 text-white/60">
-              Le bon dispositif technique ne se remarque pas par ses complications. Il se remarque par sa fluidité, sa netteté et la confiance qu’il installe immédiatement.
-            </p>
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={previous}
+                className="glass inline-flex h-12 w-12 items-center justify-center rounded-full transition hover:bg-white/10"
+                aria-label="Slide précédente"
+              >
+                <ChevronLeft className="h-5 w-5" />
+              </button>
+              <button
+                type="button"
+                onClick={next}
+                className="glass inline-flex h-12 w-12 items-center justify-center rounded-full transition hover:bg-white/10"
+                aria-label="Slide suivante"
+              >
+                <ChevronRight className="h-5 w-5" />
+              </button>
+            </div>
           </div>
 
-          <div className="mt-10 grid gap-4 md:grid-cols-[1.1fr_0.9fr]">
-            <div className="relative min-h-[420px] overflow-hidden rounded-[2.2rem] border border-white/10 bg-white/5">
+          <div className="mt-10 grid gap-5 lg:grid-cols-[1.2fr_0.8fr] lg:items-stretch">
+            <div className="relative min-h-[520px] overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/5">
               <Image
-                src={gallery[0]}
-                alt="Scène et installation lumière JGCOM"
+                src={currentSlide.image}
+                alt={currentSlide.title}
                 fill
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, 60vw"
+                className="object-cover transition duration-500"
+                sizes="(max-width: 1024px) 100vw, 65vw"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#05070b] via-transparent to-transparent" />
-              <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
-                <p className="text-xs uppercase tracking-[0.3em] text-white/50">Pilotage global</p>
-                <p className="mt-3 max-w-lg text-2xl font-semibold text-white md:text-3xl">
-                  Son, lumière et restitution visuelle intégrés dans une même lecture de scène.
-                </p>
+              <div className="absolute inset-0 bg-gradient-to-t from-[#05070b] via-[#05070b]/15 to-transparent" />
+              <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10">
+                <p className="text-xs uppercase tracking-[0.35em] text-white/52">{currentSlide.label}</p>
+                <h3 className="mt-4 max-w-3xl text-3xl font-semibold leading-tight text-white md:text-4xl">
+                  {currentSlide.title}
+                </h3>
+                <p className="mt-4 max-w-2xl text-base leading-8 text-white/70">{currentSlide.text}</p>
               </div>
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-1">
-              {gallery.slice(1).map((image, index) => (
-                <div
-                  key={image}
-                  className="relative min-h-[180px] overflow-hidden rounded-[1.8rem] border border-white/10 bg-white/5"
+            <div className="grid gap-4">
+              {slides.map((slide, index) => (
+                <button
+                  key={slide.title}
+                  type="button"
+                  onClick={() => setActiveSlide(index)}
+                  className={`glass relative overflow-hidden rounded-[2rem] border p-4 text-left transition ${
+                    index === activeSlide ? "border-white/25 bg-white/[0.08]" : "border-white/8"
+                  }`}
                 >
-                  <Image
-                    src={image}
-                    alt={`Référence JGCOM ${index + 2}`}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 100vw, 30vw"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/5 to-transparent" />
-                </div>
+                  <div className="grid gap-4 sm:grid-cols-[140px_1fr] sm:items-center">
+                    <div className="relative h-28 overflow-hidden rounded-[1.4rem] border border-white/8">
+                      <Image src={slide.image} alt={slide.label} fill className="object-cover" sizes="160px" />
+                    </div>
+                    <div>
+                      <p className="text-[11px] uppercase tracking-[0.3em] text-white/42">{slide.label}</p>
+                      <p className="mt-3 text-lg font-semibold text-white">{slide.title}</p>
+                    </div>
+                  </div>
+                </button>
               ))}
             </div>
           </div>
         </div>
       </section>
 
-      <section id="expertise" className="section-line py-20 md:py-28">
-        <div className="container-shell grid gap-12 md:grid-cols-[0.95fr_1.05fr] md:items-start">
+      <section id="expertise" className="border-b border-white/8 py-20 md:py-24">
+        <div className="container-shell grid gap-12 md:grid-cols-[0.9fr_1.1fr]">
           <div>
             <p className="text-xs uppercase tracking-[0.35em] text-[#d8b47a]">Expertise</p>
             <h2 className="display-title mt-4 text-4xl font-semibold leading-tight text-white md:text-5xl">
-              Une exécution technique pensée pour la crédibilité, la fluidité et la conversion terrain.
+              Un site plus épuré parce qu’il reflète une exécution plus maîtrisée.
             </h2>
-            <p className="mt-6 max-w-xl text-base leading-8 text-white/66">
-              Pour une entreprise, une collectivité ou une agence, la technique n’est jamais un sujet décoratif. Elle influe directement sur la perception du niveau, sur le confort des participants et sur la qualité de l’expérience produite.
+            <p className="mt-6 max-w-xl text-base leading-8 text-white/64">
+              Le premium ne vient pas d’une accumulation d’effets. Il vient d’une hiérarchie nette, d’images fortes, de peu de blocs par section et d’un message qui sait exactement ce qu’il doit faire passer.
             </p>
           </div>
 
-          <div className="glass rounded-[2rem] p-6 md:p-8">
-            <div className="grid gap-4">
-              {proofPoints.map((point) => (
-                <div
-                  key={point}
-                  className="flex items-start gap-4 rounded-[1.5rem] border border-white/8 bg-white/[0.03] p-4"
-                >
-                  <div className="mt-1 rounded-full border border-white/10 bg-white/6 p-2">
-                    <ShieldCheck className="h-4 w-4 text-[#88a8ff]" />
-                  </div>
-                  <p className="text-sm leading-7 text-white/74">{point}</p>
-                </div>
-              ))}
-            </div>
+          <div className="grid gap-4 md:grid-cols-2">
+            {proofPoints.map((point) => (
+              <div key={point} className="glass rounded-[1.8rem] p-5">
+                <ShieldCheck className="h-5 w-5 text-[#88a8ff]" />
+                <p className="mt-4 text-sm leading-7 text-white/72">{point}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      <section className="section-line py-20 md:py-28">
-        <div className="container-shell grid gap-6 md:grid-cols-3">
-          <div className="glass rounded-[2rem] p-6">
-            <Building2 className="h-6 w-6 text-[#d8b47a]" />
-            <h3 className="mt-6 text-xl font-semibold text-white">Entreprises</h3>
-            <p className="mt-3 text-sm leading-7 text-white/66">
-              Conventions, prises de parole, lancements, soirées corporate et dispositifs de marque avec exigence d’image et de fluidité.
-            </p>
-          </div>
-          <div className="glass rounded-[2rem] p-6">
-            <MapPin className="h-6 w-6 text-[#d8b47a]" />
-            <h3 className="mt-6 text-xl font-semibold text-white">Collectivités</h3>
-            <p className="mt-3 text-sm leading-7 text-white/66">
-              Installations temporaires robustes, lisibles et bien pilotées pour événements publics, institutionnels et culturels.
-            </p>
-          </div>
-          <div className="glass rounded-[2rem] p-6">
-            <CirclePlay className="h-6 w-6 text-[#d8b47a]" />
-            <h3 className="mt-6 text-xl font-semibold text-white">Agences</h3>
-            <p className="mt-3 text-sm leading-7 text-white/66">
-              Un partenaire technique fiable pour absorber la complexité opérationnelle et protéger la qualité finale du dispositif.
-            </p>
-          </div>
+      <section className="border-b border-white/8 py-20 md:py-24">
+        <div className="container-shell grid gap-4 md:grid-cols-3">
+          {sectors.map((sector) => {
+            const Icon = sector.icon;
+            return (
+              <article key={sector.title} className="glass rounded-[2rem] p-6">
+                <Icon className="h-6 w-6 text-[#d8b47a]" />
+                <h3 className="mt-6 text-2xl font-semibold text-white">{sector.title}</h3>
+                <p className="mt-3 text-sm leading-7 text-white/66">{sector.text}</p>
+              </article>
+            );
+          })}
         </div>
       </section>
 
-      <section id="contact" className="py-20 md:py-28">
+      <section id="contact" className="py-20 md:py-24">
         <div className="container-shell">
           <div className="glass relative overflow-hidden rounded-[2.5rem] p-8 md:p-12">
-            <div className="absolute -right-16 -top-16 h-48 w-48 rounded-full bg-[#88a8ff]/20 blur-3xl" />
-            <div className="absolute -bottom-20 left-10 h-52 w-52 rounded-full bg-[#d8b47a]/12 blur-3xl" />
+            <div className="absolute -right-16 -top-16 h-48 w-48 rounded-full bg-[#88a8ff]/18 blur-3xl" />
+            <div className="absolute -bottom-20 left-10 h-52 w-52 rounded-full bg-[#d8b47a]/10 blur-3xl" />
             <div className="relative z-10 grid gap-10 md:grid-cols-[1fr_auto] md:items-end">
               <div>
-                <p className="text-xs uppercase tracking-[0.35em] text-[#d8b47a]">Contact</p>
+                <p className="text-xs uppercase tracking-[0.35em] text-[#d8b47a]">Conversion</p>
                 <h2 className="display-title mt-4 max-w-3xl text-4xl font-semibold leading-tight text-white md:text-5xl">
-                  Vous avez un événement à cadrer : parlons du dispositif, des contraintes et du niveau attendu.
+                  Vous avez besoin d’un dispositif technique qui élève l’image de votre événement.
                 </h2>
                 <p className="mt-5 max-w-2xl text-base leading-8 text-white/68">
-                  Nous préparons une base de site pensée pour générer plus de demandes qualifiées, mieux présenter vos métiers et renforcer votre visibilité naturelle sur Google et dans les interfaces IA.
+                  Nous cadrons les contraintes, le niveau d’exigence et les enjeux d’image pour transformer une demande floue en dispositif clair, fiable et mieux présenté.
                 </p>
               </div>
               <div className="flex flex-col gap-3">
@@ -330,7 +347,7 @@ export default function Home() {
                   href="/services"
                   className="inline-flex items-center justify-center rounded-full border border-white/14 bg-white/6 px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-white/10"
                 >
-                  Explorer les services
+                  Voir les prestations
                 </Link>
               </div>
             </div>
