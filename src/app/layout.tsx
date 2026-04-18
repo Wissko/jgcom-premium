@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Manrope } from "next/font/google";
+import JgcomMenu from "@/components/JgcomMenu";
 import "./globals.css";
 
 const inter = Inter({
@@ -63,7 +64,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr" className={`${inter.variable} ${manrope.variable}`}>
-      <body>{children}</body>
+      <body>
+        <JgcomMenu />
+        {children}
+      </body>
     </html>
   );
 }
